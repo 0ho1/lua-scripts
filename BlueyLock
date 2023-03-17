@@ -1,7 +1,7 @@
 local CC = game:GetService'Workspace'.CurrentCamera
 local Plr
 local enabled = false
-local accomidationfactor = 0.129
+local accomidationfactor = 0.1325
 local mouse = game.Players.LocalPlayer:GetMouse()
 local placemarker = Instance.new("Part", game.Workspace)
 local guimain = Instance.new("Folder", game.CoreGui)
@@ -123,7 +123,7 @@ end
   
 game.StarterGui:SetCore("SendNotification", {
   Title = "Bluey Lock";
-  Text = "Loaded! (Lock Key: C)";
+  Text = "Loaded (Lock Key: C)";
   Icon = "rbxassetid://806623071";
   Duration = 1.45
 })
