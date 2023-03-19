@@ -1,7 +1,18 @@
+local function notification(message)
+    game.StarterGui:SetCore("SendNotification", {
+  	Title = "Bluey Lock";
+  	Text = message;
+  	Icon = "rbxassetid://806623071";
+  	Duration = 1.45
+    })
+end
+
+if game.ReplicatedFirst:FindFirstChild("BLock") then notification("Lock already executed") return else local f = Instance.new("Folder") f.Name = "BLock" f.Parent = game.ReplicatedFirst end
+
 local CC = game:GetService'Workspace'.CurrentCamera
 local Plr
 local enabled = false
-local accomidationfactor = 0.1325
+local accomidationfactor = 0.132575
 local mouse = game.Players.LocalPlayer:GetMouse()
 local placemarker = Instance.new("Part", game.Workspace)
 local guimain = Instance.new("Folder", game.CoreGui)
@@ -121,9 +132,4 @@ end
 		return old(...)
 	end)
   
-game.StarterGui:SetCore("SendNotification", {
-  Title = "Bluey Lock";
-  Text = "Loaded (Lock Key: C)";
-  Icon = "rbxassetid://806623071";
-  Duration = 1.45
-})
+notification("Loaded (Lock Key: C)")
