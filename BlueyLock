@@ -7,6 +7,7 @@ local function notification(message)
     })
 end
 
+if not game.ReplicatedStorage:FindFirstChild("MainEvent") then notification("Game not supported") return end
 if game.ReplicatedFirst:FindFirstChild("BLock") then notification("Lock already executed") return else local f = Instance.new("Folder") f.Name = "BLock" f.Parent = game.ReplicatedFirst end
 
 local CC = game:GetService'Workspace'.CurrentCamera
