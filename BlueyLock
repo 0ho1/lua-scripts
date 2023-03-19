@@ -13,7 +13,8 @@ if game.ReplicatedFirst:FindFirstChild("BLock") then notification("Lock already 
 local CC = game:GetService'Workspace'.CurrentCamera
 local Plr
 local enabled = false
-local accomidationfactor = 0.132575
+local baseFactor = 132575
+local accomidationfactor = baseFactor
 local mouse = game.Players.LocalPlayer:GetMouse()
 local placemarker = Instance.new("Part", game.Workspace)
 local guimain = Instance.new("Folder", game.CoreGui)
@@ -114,6 +115,7 @@ function getClosestPlayerToCursor()
 end
 
 	game:GetService"RunService".Stepped:connect(function()
+		accomidationfactor = baseFactor * ((Player:GetNetworkPing() * 2000) / 2.5) + baseFactor
 		if enabled and Plr.Character and Plr.Character:FindFirstChild("HumanoidRootPart") then
 			placemarker.CFrame = CFrame.new(Plr.Character.HumanoidRootPart.Position+(Plr.Character.HumanoidRootPart.Velocity*accomidationfactor))
 		else
