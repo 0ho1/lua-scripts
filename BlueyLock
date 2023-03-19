@@ -133,4 +133,4 @@ end
 		return old(...)
 	end)
   
-notification("Loaded (Lock Key: C)")
+notification("Loaded (Lock Key: C  |  discord.gg/ggJ3bgt6TS)")
