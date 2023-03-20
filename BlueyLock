@@ -41,7 +41,6 @@ function noob(player)
     local handler = makemarker(guimain, player.Character:WaitForChild("LowerTorso"), Color3.fromRGB(0, 76, 153), 0.0, 0)
     handler.Name = player.Name
     player.CharacterAdded:connect(function(Char) handler.Adornee = Char:WaitForChild("LowerTorso") end)
-    
 	local TextLabel = Instance.new("TextLabel", handler)
 	TextLabel.BackgroundTransparency = 1
 	TextLabel.Position = UDim2.new(0, 0, 0, -50)
@@ -60,7 +59,7 @@ function noob(player)
                 --TextLabel.Text = player.Name.." | Bounty: "..tostring(player:WaitForChild("leaderstats").Wanted.Value).." | "..tostring(math.floor(player.Character:WaitForChild("Humanoid").Health))
             end
         end
-	end)
+    end)
 end
 
 for i = 1, #data do
