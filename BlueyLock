@@ -26,7 +26,7 @@ function makemarker(Parent, Adornee, Color, Size, Size2)
     e.Size = UDim2.new(Size, Size2, Size, Size2)
     e.AlwaysOnTop = true
     local a = Instance.new("Frame", e)
-    a.Size = UDim2.new(1, 0, 1, 0)
+    a.Size = UDim2.new(1.75, 0, 1.75, 0)
     a.BackgroundTransparency = 0.4
     a.BackgroundColor3 = Color
     local g = Instance.new("UICorner", a)
@@ -114,26 +114,27 @@ function getClosestPlayerToCursor()
    return closestPlayer
 end
 
-	game:GetService"RunService".Stepped:connect(function()
-		--accomidationfactor = baseFactor * ((Player:GetNetworkPing() * 2000) / 2.5) + baseFactor
+game:GetService"RunService".Stepped:connect(function()
+	--accomidationfactor = baseFactor * ((Player:GetNetworkPing() * 2000) / 2.5) + baseFactor
 		
-		if enabled and Plr.Character and Plr.Character:FindFirstChild("HumanoidRootPart") then
-			placemarker.CFrame = CFrame.new(Plr.Character.HumanoidRootPart.Position+(Plr.Character.HumanoidRootPart.Velocity*accomidationfactor))
-		else
-			placemarker.CFrame = CFrame.new(0, 9999, 0)
-		end
-	end)
+	if enabled and Plr.Character and Plr.Character:FindFirstChild("HumanoidRootPart") then
+		placemarker.CFrame = CFrame.new(Plr.Character.HumanoidRootPart.Position+(Plr.Character.HumanoidRootPart.Velocity*accomidationfactor))
+	else
+		placemarker.CFrame = CFrame.new(0, 9999, 0)
+	end
+end)
 
-	local mt = getrawmetatable(game)
-	local old = mt.__namecall
-	setreadonly(mt, false)
-	mt.__namecall = newcclosure(function(...)
-		local args = {...}
-		if enabled and getnamecallmethod() == "FireServer" and args[2] == "UpdateMousePos" then
-			args[3] = Plr.Character.HumanoidRootPart.Position+(Plr.Character.HumanoidRootPart.Velocity*accomidationfactor)
-			return old(unpack(args))
-		end
-		return old(...)
-	end)
-  
+local mt = getrawmetatable(game)
+local old = mt.__namecall
+setreadonly(mt, false)
+mt.__namecall = newcclosure(function(...)
+	local args = {...}
+	if enabled and getnamecallmethod() == "FireServer" and args[2] == "UpdateMousePos" then
+		args[3] = Plr.Character.HumanoidRootPart.Position+(Plr.Character.HumanoidRootPart.Velocity*accomidationfactor)
+		return old(unpack(args))
+	end
+	return old(...)
+end)
+ 
+ 
 notification("Loaded (Lock Key: C  |  discord.gg/ggJ3bgt6TS)")
