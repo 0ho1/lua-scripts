@@ -13,7 +13,7 @@ if game.ReplicatedFirst:FindFirstChild("BLock") then notification("Lock already 
 local CC = game:GetService'Workspace'.CurrentCamera
 local Plr
 local enabled = false
-local baseFactor = 132575
+local baseFactor = 0.0132575
 local accomidationfactor = baseFactor
 local mouse = game.Players.LocalPlayer:GetMouse()
 local placemarker = Instance.new("Part", game.Workspace)
