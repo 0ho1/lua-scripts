@@ -133,6 +133,8 @@ mt.__namecall = newcclosure(function(...)
 	end
 	return old(...)
 end)
- 
- 
-notification("Loaded (Lock Key: C  |  discord.gg/ggJ3bgt6TS)")
+
+notification("Loaded | discord.gg/ggJ3bgt6TS")
+pcall(function()
+	setclipboard("discord.gg/ggJ3bgt6TS")
+end)
