@@ -1,0 +1,118 @@
+local g = game
+
+if not g.IsLoaded then g.Loaded:Wait() end
+
+local w = g.Workspace
+local l = g.Lighting
+local t = w.Terrain
+
+local unloaded = Instance.new("Folder", game.ReplicatedFirst)
+unloaded.Name = "_.UNLOADED"
+
+g.Workspace.StreamingEnabled = true
+pcall(function() setfpscap(175) end)
+
+for i, v in pairs(g:GetDescendants()) do
+    if v:IsA("Part") or v:IsA("Union") or v:IsA("CornerWedgePart") or v:IsA("TrussPart") then
+        v.Material = "Plastic"
+        v.Reflectance = 0
+    elseif v:IsA("Decal") or v:IsA("Texture") then
+        local div = 1 / v.Transparency
+	
+	if div <= 100 then
+		v.Transparency = div / 75
+	end
+    elseif v:IsA("ParticleEmitter") or v:IsA("Trail") then
+        v.Lifetime = NumberRange.new(0)
+    elseif v:IsA("Explosion") then
+        v.BlastPressure = 1
+        v.BlastRadius = 1
+    elseif v:IsA("Fire") or v:IsA("SpotLight") or v:IsA("Smoke") or v:IsA("Sparkles") then
+        v.Enabled = false
+    elseif v:IsA("MeshPart") then
+        v.Material = "Plastic"
+        v.Reflectance = 0
+        v.TextureID = 10385902758728957
+    end
+end
+
+l.FogEnd = 9e9
+
+for i, e in pairs(l:GetChildren()) do
+    if e:IsA("BlurEffect") or e:IsA("DepthOfFieldEffect") then
+        e.Enabled = false
+    end
+end
+
+local c = w.CurrentCamera or w:FindFirstChildOfClass("Camera")
+if c == nil then pcall(function() c = w.Camera end)
+	if not c or c == nil then
+   		warn("Waiting for Camera [L]")
+   		repeat task.wait() until w:FindFirstChildOfClass("Camera")
+   
+   		task.wait()
+   		c = w:FindFirstChildOfClass("Camera")
+	end
+end
+print("Found Camera")
+
+local rs = game:GetService("RunService")
+
+rs.RenderStepped:Connect(function()
+	task.spawn(function()
+		for _, Part in pairs(w:GetDescendants()) do
+			local meta, data = pcall(function()
+				if Part:IsA("Part") or Part:IsA("MeshPart") or Part:IsA("UnionOperation") or Part:IsA("BasePart") then
+					if Part ~= nil and Part and c ~= nil and c then
+						local _, vtp = c:WorldToScreenPoint(Part.Position)
+	
+						local function unload()
+							if not Part.Parent:FindFirstChildOfClass("Humanoid") then
+								if not Part:FindFirstChild("Original") then
+									local origin = Instance.new("ObjectValue", Part)
+									origin.Name = "Original"
+									origin.Value = Part
+								end
+						
+								Part.Parent = unloaded
+								warn("unloaded object ["..Part.Name.."]")
+							end
+						end
+
+						if not vtp or Part.Transparency < 0.5 then
+							if not Part.Transparency < 0.5 then
+								unload()
+							else
+								if not Part.CanCollide then
+									unload()
+								end
+							end
+						end
+					else
+						warn(Part, c)
+					end
+				end
+			end)
+			
+			if not meta then
+				warn(data)
+			end
+		end
+		
+		for _, Part in pairs(unloaded:GetDescendants()) do
+			local _, vtp = c:WorldToScreenPoint(Part.Position)
+		
+			if vtp then
+				if Part:FindFirstChild("Original") then
+					warn("loading ["..Part.Name.."]")
+					Part.Parent = Part.Original.Value
+				else
+					warn("failed to load, no original value")
+				end
+			end
+		end
+	end)
+end)
+
+local Version = ".11"
+print("Loaded Bluey Booster (@V"..Version..")")
