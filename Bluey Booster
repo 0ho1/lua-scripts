@@ -118,6 +118,8 @@ rs.Stepped:Connect(function()
 										unload()
 									end
 								end
+								
+								warn(e)
 							end
 						end
 					else
