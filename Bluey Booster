@@ -163,3 +163,10 @@ end
 
 local Version = ".115"
 print("Loaded Bluey Booster (@V"..Version..")")
+pcall(function()
+	rconsolename("Bluey Booster")
+	printconsole("Loaded")
+	printconsole("")
+	printconsole("SETTINGS:")
+	printconsole(tostring(shared.CameraRendering))
+end)
