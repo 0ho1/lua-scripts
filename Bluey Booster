@@ -164,7 +164,7 @@ end
 local Version = ".115"
 print("Loaded Bluey Booster (@V"..Version..")")
 pcall(function()
-	rconsolename("Bluey Booster")
+	rconsolename("Bluey Booster (@V"..Version..")")
 	rconsoleprint("Loaded")
 	rconsoleprint("")
 	rconsoleprint("SETTINGS:")
