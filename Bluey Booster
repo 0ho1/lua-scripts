@@ -159,5 +159,5 @@ rs.Stepped:Connect(function()
 	end)
 end)
 
-local Version = ".114"
+local Version = ".115"
 print("Loaded Bluey Booster (@V"..Version..")")
