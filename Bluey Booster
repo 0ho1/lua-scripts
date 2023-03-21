@@ -134,18 +134,22 @@ rs.Stepped:Connect(function()
 		end
 		
 		for _, Part in pairs(unloaded:GetDescendants()) do
-			local _, vtp = c:WorldToScreenPoint(Part.Position)
+			if not Part:IsA("ObjectValue") then
+				local _, vtp = c:WorldToScreenPoint(Part.Position)
 		
-			if vtp then
-				if Part:FindFirstChild("Original") then
-					Part.Parent = Part.Original.Value
-				else
-					warn("failed to load, no original value")
+				if vtp then
+					if Part:FindFirstChild("Original") then
+						pcall(function()
+							Part.Parent = Part.Original.Value
+						end)
+					else
+						warn("failed to load, no original value")
+					end
 				end
 			end
 		end
 	end)
 end)
 
-local Version = ".113"
+local Version = ".114"
 print("Loaded Bluey Booster (@V"..Version..")")
