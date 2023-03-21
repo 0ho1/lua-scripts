@@ -75,7 +75,7 @@ print("Found Camera")
 
 local rs = game:GetService("RunService")
 
-local blacklisted = {"BULLET_RAYS", "CUFF", "Handle"}
+local blacklisted = {"BULLET_RAYS", "CUFF", "Handle", "HumanoidRootPart", "Head"}
 
 rs.Stepped:Connect(function()
 	task.spawn(function()
