@@ -80,13 +80,15 @@ rs.RenderStepped:Connect(function()
 						end
 
 						if not vtp or Part.Transparency < 0.5 then
-							if Part.Transparency > 0.5 then
-								unload()
-							else
-								if not Part.CanCollide then
+							local s, e = pcall(function()
+								if Part.Transparency > 0.5 then
 									unload()
+								else
+									if not Part.CanCollide then
+										unload()
+									end
 								end
-							end
+							end)
 						end
 					else
 						warn(Part, c)
