@@ -79,7 +79,7 @@ local blacklisted = {"BULLET_RAYS", "CUFF", "Handle"}
 
 rs.Stepped:Connect(function()
 	task.spawn(function()
-		for _, Part in pairs(w:GetDescendants()) do
+		for _, Part in pairs(w:GetChildren()) do
 			local meta, data = pcall(function()
 				if Part:IsA("Part") or Part:IsA("MeshPart") or Part:IsA("UnionOperation") or Part:IsA("BasePart") then
 					if Part ~= nil and Part and c ~= nil and c then
