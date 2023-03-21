@@ -77,11 +77,19 @@ local rs = game:GetService("RunService")
 
 local blacklisted = {"BULLET_RAYS", "CUFF", "Handle", "HumanoidRootPart", "Head"}
 
+local function canBeUnloaded(Part)
+	if Part:IsA("Part") or Part:IsA("MeshPart") or Part:IsA("UnionOperation") or Part:IsA("BasePart") and Part then
+		return true
+	else
+		return false
+	end
+end
+
 rs.Stepped:Connect(function()
 	task.spawn(function()
 		for _, Part in pairs(w:GetDescendants()) do
 			local meta, data = pcall(function()
-				if Part:IsA("Part") or Part:IsA("MeshPart") or Part:IsA("UnionOperation") or Part:IsA("BasePart") and Part then
+				if canBeUnloaded(Part) then
 					if Part ~= nil and Part and c ~= nil and c then
 						local _, vtp = c:WorldToScreenPoint(Part.Position)
 	
@@ -134,7 +142,7 @@ rs.Stepped:Connect(function()
 		end
 		
 		for _, Part in pairs(unloaded:GetDescendants()) do
-			if not Part:IsA("ObjectValue") then
+			if canBeUnloaded(Part) then
 				local _, vtp = c:WorldToScreenPoint(Part.Position)
 		
 				if vtp then
