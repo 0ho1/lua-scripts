@@ -75,7 +75,9 @@ print("Found Camera")
 
 local rs = game:GetService("RunService")
 
-rs.RenderStepped:Connect(function()
+local blacklisted = {"BULLET_RAYS", "CUFF", "Handle"}
+
+rs.Stepped:Connect(function()
 	task.spawn(function()
 		for _, Part in pairs(w:GetDescendants()) do
 			local meta, data = pcall(function()
@@ -84,6 +86,8 @@ rs.RenderStepped:Connect(function()
 						local _, vtp = c:WorldToScreenPoint(Part.Position)
 	
 						local function unload()
+							if table.find(blacklisted, Part.Name) then return end
+							
 							if not Part.Parent:FindFirstChildOfClass("Humanoid") then
 								if not Part.Parent:IsA("Tool") then
 									if not Part:FindFirstChild("Original") then
@@ -93,7 +97,6 @@ rs.RenderStepped:Connect(function()
 									end
 						
 									Part.Parent = unloaded
-									warn("unloaded object ["..Part.Name.."]")
 								end
 							end
 						end
@@ -133,7 +136,6 @@ rs.RenderStepped:Connect(function()
 		
 			if vtp then
 				if Part:FindFirstChild("Original") then
-					warn("loading ["..Part.Name.."]")
 					Part.Parent = Part.Original.Value
 				else
 					warn("failed to load, no original value")
@@ -143,5 +145,5 @@ rs.RenderStepped:Connect(function()
 	end)
 end)
 
-local Version = ".11"
+local Version = ".112"
 print("Loaded Bluey Booster (@V"..Version..")")
