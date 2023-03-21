@@ -85,79 +85,81 @@ local function canBeUnloaded(Part)
 	end
 end
 
-rs.Stepped:Connect(function()
-	task.spawn(function()
-		for _, Part in pairs(w:GetDescendants()) do
-			local meta, data = pcall(function()
-				if canBeUnloaded(Part) then
-					if Part ~= nil and Part and c ~= nil and c then
-						local _, vtp = c:WorldToScreenPoint(Part.Position)
+if shared.CameraRendering then
+	rs.Stepped:Connect(function()
+		task.spawn(function()
+			for _, Part in pairs(w:GetDescendants()) do
+				local meta, data = pcall(function()
+					if canBeUnloaded(Part) then
+						if Part ~= nil and Part and c ~= nil and c then
+							local _, vtp = c:WorldToScreenPoint(Part.Position)
 	
-						local function unload()
-							if table.find(blacklisted, Part.Name) then return end
+							local function unload()
+								if table.find(blacklisted, Part.Name) then return end
 							
-							if not Part.Parent:FindFirstChildOfClass("Humanoid") then
-								if not Part.Parent:IsA("Tool") then
-									if not Part:FindFirstChild("Original") then
-										local origin = Instance.new("ObjectValue", Part)
-										origin.Name = "Original"
-										origin.Value = Part
-									end
+								if not Part.Parent:FindFirstChildOfClass("Humanoid") then
+									if not Part.Parent:IsA("Tool") then
+										if not Part:FindFirstChild("Original") then
+											local origin = Instance.new("ObjectValue", Part)
+											origin.Name = "Original"
+											origin.Value = Part
+										end
 						
-									Part.Parent = unloaded
+										Part.Parent = unloaded
+									end
 								end
 							end
-						end
 
-						if not vtp or Part.Transparency < 0.5 then
-							local s, e = pcall(function()
-								if Part.Transparency > 0.5 then
-									unload()
-								else
-									if not Part.CanCollide then
+							if not vtp or Part.Transparency < 0.5 then
+								local s, e = pcall(function()
+									if Part.Transparency > 0.5 then
 										unload()
+									else
+										if not Part.CanCollide then
+											unload()
+										end
 									end
-								end
-							end)
+								end)
 							
-							if not s then
-								if not Part:FindFirstChildOfClass("Decal") then
-									if Part.Transparency > 0.75 then
-										unload()
+								if not s then
+									if not Part:FindFirstChildOfClass("Decal") then
+										if Part.Transparency > 0.75 then
+											unload()
+										end
 									end
-								end
 								
-								warn(e)
+									warn(e)
+								end
 							end
+						else
+							warn(Part, c)
 						end
-					else
-						warn(Part, c)
 					end
-				end
-			end)
+				end)
 			
-			if not meta then
-				warn(data)
+				if not meta then
+					warn(data)
+				end
 			end
-		end
 		
-		for _, Part in pairs(unloaded:GetDescendants()) do
-			if canBeUnloaded(Part) then
-				local _, vtp = c:WorldToScreenPoint(Part.Position)
+			for _, Part in pairs(unloaded:GetDescendants()) do
+				if canBeUnloaded(Part) then
+					local _, vtp = c:WorldToScreenPoint(Part.Position)
 		
-				if vtp then
-					if Part:FindFirstChild("Original") then
-						pcall(function()
-							Part.Parent = Part.Original.Value
-						end)
-					else
-						warn("failed to load, no original value")
+					if vtp then
+						if Part:FindFirstChild("Original") then
+							pcall(function()
+								Part.Parent = Part.Original.Value
+							end)
+						else
+							warn("failed to load, no original value")
+						end
 					end
 				end
 			end
-		end
+		end)
 	end)
-end)
+end
 
 local Version = ".115"
 print("Loaded Bluey Booster (@V"..Version..")")
