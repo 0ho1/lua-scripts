@@ -6,52 +6,76 @@ local w = g.Workspace
 local l = g.Lighting
 local t = w.Terrain
 
+local uis = g:GetService("UserInputService")
+
 local unloaded = Instance.new("Folder", game.ReplicatedFirst)
 unloaded.Name = "_.UNLOADED"
 
+local rs = g:GetService("RunService")
+
 g.Workspace.StreamingEnabled = true
+
+rs:Set3dRenderingEnabled(false)
+
 pcall(function() setfpscap(175) end)
 
-for i, v in pairs(g:GetDescendants()) do
-    if v:IsA("Part") or v:IsA("Union") or v:IsA("CornerWedgePart") or v:IsA("TrussPart") then
-        v.Material = "Plastic"
-        v.Reflectance = 0
+local function check(v)
+	if not v then return end
 	
-	task.spawn(function()
-		local weldCount = 0
-		for i,v in pairs(v:GetChildren()) do
-			if v.ClassName == "Weld" then
-				weldCount += 1
+	if v:IsA("Part") or v:IsA("Union") or v:IsA("CornerWedgePart") or v:IsA("TrussPart") then
+        	v.Material = "Plastic"
+        	v.Reflectance = 0
+	
+		task.spawn(function()
+			local weldCount = 0
+			for i,v in pairs(v:GetChildren()) do
+				if v.ClassName == "Weld" then
+					weldCount += 1
 				
-				if weldCount >= 2 then
-					v:Destroy()
+					if weldCount >= 2 then
+						v:Destroy()
+					end
 				end
 			end
-		end
-	end)
-    elseif v:IsA("Decal") or v:IsA("Texture") then
-        local div = 1 / v.Transparency
+		end)
+		
+   	 elseif v:IsA("Decal") or v:IsA("Texture") then
+      	 	local div = 1 / v.Transparency
 	
-	if div <= 100 then
-		v.Transparency = div / 75
-	end
-    elseif v:IsA("ParticleEmitter") or v:IsA("Trail") then
-        v.Lifetime = NumberRange.new(0)
-    elseif v:IsA("Explosion") then
-        v.BlastPressure = 1
-        v.BlastRadius = 1
-    elseif v:IsA("Fire") or v:IsA("SpotLight") or v:IsA("Smoke") or v:IsA("Sparkles") then
-        v.Enabled = false
-    elseif v:IsA("MeshPart") then
-        v.Material = "Plastic"
-        v.Reflectance = 0
-        v.TextureID = 10385902758728957
-    elseif v:IsA("Sound") then
-	if v.SoundId == "http://www.roblox.com/asset/?id=" or v.SoundId == "rbxassetid://0" or v.SoundId == "rbxassetid://" or not v.IsLoaded then
-		v:Destroy()
-	end
-    end
+		if div <= 100 then
+			v.Transparency = div / 75
+		end
+		
+   	elseif v:IsA("ParticleEmitter") or v:IsA("Trail") then
+      	  	v.Lifetime = NumberRange.new(0)
+		
+    	elseif v:IsA("Explosion") then
+       	 	v.BlastPressure = 1
+        	v.BlastRadius = 1
+		
+    	elseif v:IsA("Fire") or v:IsA("SpotLight") or v:IsA("Smoke") or v:IsA("Sparkles") then
+        	v.Enabled = false
+		
+    	elseif v:IsA("MeshPart") then
+        	v.Material = "Plastic"
+        	v.Reflectance = 0
+        	v.TextureID = 10385902758728957
+		
+    	elseif v:IsA("Sound") then
+		if v.SoundId == "http://www.roblox.com/asset/?id=" or v.SoundId == "rbxassetid://0" or v.SoundId == "rbxassetid://" or not v.IsLoaded then
+			v:Destroy()
+		end
+    	end
 end
+
+for i, v in pairs(g:GetDescendants()) do
+    check(v)
+end
+task.spawn(function()
+	g.DescendantAdded:Connect(function(object)
+		check(object)
+	end)
+end)
 
 l.FogEnd = 9e9
 
@@ -64,16 +88,13 @@ end
 local c = w.CurrentCamera or w:FindFirstChildOfClass("Camera")
 if c == nil then pcall(function() c = w.Camera end)
 	if not c or c == nil then
-   		warn("Waiting for Camera [L]")
+   		warn("C [L]")
    		repeat task.wait() until w:FindFirstChildOfClass("Camera")
    
    		task.wait()
    		c = w:FindFirstChildOfClass("Camera")
 	end
 end
-print("Found Camera")
-
-local rs = game:GetService("RunService")
 
 local blacklisted = {"BULLET_RAYS", "CUFF", "Handle", "HumanoidRootPart", "Head"}
 
@@ -160,6 +181,18 @@ if shared.CameraRendering then
 		end)
 	end)
 end
+
+rs:Set3dRenderingEnabled(true)
+
+UserInputService.WindowFocusReleased:Connect(function()
+	RunService:Set3dRenderingEnabled(false)
+    	setfpscap(10)
+end)
+UserInputService.WindowFocused:Connect(function()
+ 	RunService:Set3dRenderingEnabled(true)
+    	setfpscap(175)
+end)
+
 
 local Version = ".115"
 print("Loaded Bluey Booster (@V"..Version..")")
