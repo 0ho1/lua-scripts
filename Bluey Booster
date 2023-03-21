@@ -16,6 +16,19 @@ for i, v in pairs(g:GetDescendants()) do
     if v:IsA("Part") or v:IsA("Union") or v:IsA("CornerWedgePart") or v:IsA("TrussPart") then
         v.Material = "Plastic"
         v.Reflectance = 0
+	
+	task.spawn(function()
+		local weldCount = 0
+		for i,v in pairs(v:GetChildren()) do
+			if v.ClassName == "Weld" then
+				weldCount += 1
+				
+				if weldCount >= 2 then
+					v:Destroy()
+				end
+			end
+		end
+	end)
     elseif v:IsA("Decal") or v:IsA("Texture") then
         local div = 1 / v.Transparency
 	
