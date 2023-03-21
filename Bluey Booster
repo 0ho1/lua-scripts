@@ -33,6 +33,10 @@ for i, v in pairs(g:GetDescendants()) do
         v.Material = "Plastic"
         v.Reflectance = 0
         v.TextureID = 10385902758728957
+    elseif v:IsA("Sound") then
+	if v.SoundId == "http://www.roblox.com/asset/?id=" or v.SoundId == "rbxassetid://0" or v.SoundId == "rbxassetid://" or not v.IsLoaded then
+		v:Destroy()
+	end
     end
 end
 
@@ -68,14 +72,16 @@ rs.RenderStepped:Connect(function()
 	
 						local function unload()
 							if not Part.Parent:FindFirstChildOfClass("Humanoid") then
-								if not Part:FindFirstChild("Original") then
-									local origin = Instance.new("ObjectValue", Part)
-									origin.Name = "Original"
-									origin.Value = Part
-								end
+								if not Part.Parent:IsA("Tool") then
+									if not Part:FindFirstChild("Original") then
+										local origin = Instance.new("ObjectValue", Part)
+										origin.Name = "Original"
+										origin.Value = Part
+									end
 						
-								Part.Parent = unloaded
-								warn("unloaded object ["..Part.Name.."]")
+									Part.Parent = unloaded
+									warn("unloaded object ["..Part.Name.."]")
+								end
 							end
 						end
 
