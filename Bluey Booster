@@ -89,6 +89,14 @@ rs.RenderStepped:Connect(function()
 									end
 								end
 							end)
+							
+							if not s then
+								if not Part:FindFirstChildOfClass("Decal") then
+									if Part.Transparency > 0.75 then
+										unload()
+									end
+								end
+							end
 						end
 					else
 						warn(Part, c)
