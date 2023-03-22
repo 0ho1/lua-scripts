@@ -109,16 +109,18 @@ function getClosestPlayerToCursor()
     local closestPlayer
     local shortestDistance = math.huge
 
-    for i, v in pairs(game.Players:GetPlayers()) do
-        if v ~= game.Players.LocalPlayer and v.Character and v.Character:FindFirstChild("Humanoid") and v.Character.Humanoid.Health ~= 0 and v.Character:FindFirstChild("Head") then
-            local pos = CC:WorldToViewportPoint(v.Character.PrimaryPart.Position)
-            local magnitude = (Vector2.new(pos.X, pos.Y) - Vector2.new(mouse.X, mouse.Y)).magnitude
-            if magnitude < shortestDistance then
-                closestPlayer = v
-                shortestDistance = magnitude
-            end
-        end
-    end
+    task.spawn(function()
+    	for i, v in pairs(game.Players:GetPlayers()) do
+       	 	if v ~= game.Players.LocalPlayer and v.Character and v.Character:FindFirstChild("Humanoid") and v.Character.Humanoid.Health ~= 0 and v.Character:FindFirstChild("Head") then
+            		local pos = CC:WorldToViewportPoint(v.Character.PrimaryPart.Position)
+            		local magnitude = (Vector2.new(pos.X, pos.Y) - Vector2.new(mouse.X, mouse.Y)).magnitude
+            		if magnitude < shortestDistance then
+                		closestPlayer = v
+                		shortestDistance = magnitude
+            		end
+        	end
+    	end
+    end)
    return closestPlayer
 end
 
@@ -136,24 +138,26 @@ setreadonly(mt, false)
 mt.__namecall = newcclosure(function(...)
 	local args = {...}
 	
-	if Plr then
-		if Plr.Character then
-			if Plr.Character:FindFirstChild("HumanoidRootPart") then
-				local chunkPrediction = Plr.Character.HumanoidRootPart.Position+(Plr.Character.HumanoidRootPart.Velocity*accomidationfactor)
+	task.spawn(function()
+		if Plr then
+			if Plr.Character then
+				if Plr.Character:FindFirstChild("HumanoidRootPart") then
+					local chunkPrediction = Plr.Character.HumanoidRootPart.Position+(Plr.Character.HumanoidRootPart.Velocity*accomidationfactor)
 	
-				if Plr.Character:FindFirstChildOfClass("Humanoid") then
-					if Plr.Character.Humanoid.Health > 0.1 then
-						if enabled and getnamecallmethod() == "FireServer" and args[2] == "UpdateMousePos" then
-							args[3] = chunkPrediction
-							return old(unpack(args))
-						else
-							if enabled and getnamecallmethod() == "FireServer" then
-								if args[1] ~= nil then
-									-- + Game Support
+					if Plr.Character:FindFirstChildOfClass("Humanoid") then
+						if Plr.Character.Humanoid.Health > 0.1 then
+							if enabled and getnamecallmethod() == "FireServer" and args[2] == "UpdateMousePos" then
+								args[3] = chunkPrediction
+								return old(unpack(args))
+							else
+								if enabled and getnamecallmethod() == "FireServer" then
+									if args[1] ~= nil then
+										-- + Game Support
 			
-									if game.GameId == 9432735718 then
-										args[1] = chunkPrediction
-										return old(unpack(args))
+										if game.GameId == 9432735718 then
+											args[1] = chunkPrediction
+											return old(unpack(args))
+										end
 									end
 								end
 							end
@@ -162,7 +166,7 @@ mt.__namecall = newcclosure(function(...)
 				end
 			end
 		end
-	end
+	end)
 	
 	return old(...)
 end)
