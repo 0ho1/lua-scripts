@@ -7,15 +7,17 @@ local function notification(message)
     })
 end
 
-local supportedGames = {9432735718}
+local supportedGames = {
+	9432735718
+}
 
-if not game.ReplicatedStorage:FindFirstChild("MainEvent") then
+if not game:GetService("ReplicatedStorage"):FindFirstChild("MainEvent") then
 	if not table.find(supportedGames, game.GameId) then
 		notification("Game not supported")
 		return
 	end
 end
-if game.ReplicatedFirst:FindFirstChild("BLock") then notification("Lock already executed") return else local f = Instance.new("Folder") f.Name = "BLock" f.Parent = game.ReplicatedFirst end
+if game.ReplicatedFirst:FindFirstChild("BLock") then notification("Lock already active") return else local f = Instance.new("Folder") f.Name = "BLock" f.Parent = game.ReplicatedFirst end
 
 local CC = game:GetService'Workspace'.CurrentCamera
 local Plr
@@ -142,12 +144,14 @@ mt.__namecall = newcclosure(function(...)
 				args[3] = chunkPrediction
 				return old(unpack(args))
 			else
-				if enabled and getnamecallmethod() == "FireServer" and args[1] ~= nil then
-					-- + Game Support
+				if enabled and getnamecallmethod() == "FireServer" then
+					if args[1] ~= nil then
+						-- + Game Support
 			
-					if game.GameId == 9432735718 then
-						args[1] = chunkPrediction
-						return old(unpack(args))
+						if game.GameId == 9432735718 then
+							args[1] = chunkPrediction
+							return old(unpack(args))
+						end
 					end
 				end
 			end
