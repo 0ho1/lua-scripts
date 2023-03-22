@@ -149,15 +149,13 @@ mt.__namecall = newcclosure(function(...)
 							if enabled and getnamecallmethod() == "FireServer" and args[2] == "UpdateMousePos" then
 								args[3] = chunkPrediction
 								return old(unpack(args))
-							else
-								if enabled and getnamecallmethod() == "FireServer" then
-									if args[1] ~= nil then
-										-- + Game Support
+							elseif enabled and getnamecallmethod() == "FireServer" then
+								if args[1] ~= nil then
+									-- + Addonital Game Support
 			
-										if game.GameId == 9432735718 then
-											args[1] = chunkPrediction
-											return old(unpack(args))
-										end
+									if game.GameId == 9432735718 then
+										args[1] = chunkPrediction
+										return old(unpack(args))
 									end
 								end
 							end
