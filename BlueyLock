@@ -135,14 +135,16 @@ mt.__namecall = newcclosure(function(...)
 		args[3] = chunkPrediction
 		return old(unpack(args))
 	else
-		if enabled and getnamecallmethod() == "FireServer" then
+		if enabled and getnamecallmethod() == "FireServer" and args[1] ~= nil then
 			-- + Game Support
+			
 			if game.GameId == 9432735718 then
 				args[1] = chunkPrediction
 				return old(unpack(args))
 			end
 		end
 	end
+	
 	return old(...)
 end)
 
