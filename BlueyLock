@@ -45,8 +45,8 @@ end
 
 local data = game.Players:GetPlayers()
 function noob(player)
-    local character
-    repeat wait() until player.Character
+    local character = player.Character or player.CharacterAdded:Wait()
+    
     local handler = makemarker(guimain, player.Character:WaitForChild("LowerTorso"), Color3.fromRGB(0, 76, 153), 0.0, 0)
     handler.Name = player.Name
     player.CharacterAdded:connect(function(Char) handler.Adornee = Char:WaitForChild("LowerTorso") end)
@@ -63,17 +63,19 @@ function noob(player)
 	TextLabel.ZIndex = 10
 	
 	spawn(function()
-        while wait() do
-            if player.Character then
-                --TextLabel.Text = player.Name.." | Bounty: "..tostring(player:WaitForChild("leaderstats").Wanted.Value).." | "..tostring(math.floor(player.Character:WaitForChild("Humanoid").Health))
-            end
-        end
-    end)
+       		while task.wait() do
+            		if player.Character then
+                		--TextLabel.Text = player.Name.." | Bounty: "..tostring(player:WaitForChild("leaderstats").Wanted.Value).." | "..tostring(math.floor(player.Character:WaitForChild("Humanoid").Health))
+            		end
+        	end
+    	end)
 end
 
 for i = 1, #data do
     if data[i] ~= game.Players.LocalPlayer then
-        noob(data[i])
+    	if data[i] then
+		noob(data[i])
+	end
     end
 end
 
