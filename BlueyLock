@@ -11,10 +11,13 @@ local supportedGames = {
 	9432735718
 }
 
+local aimType = "Blatant"
 if not game:GetService("ReplicatedStorage"):FindFirstChild("MainEvent") then
 	if not table.find(supportedGames, game.GameId) then
 		notification("Game not supported")
 		return
+	else
+		aimType = aimType..tostring(table.find(supportedGames, game.GameId))
 	end
 end
 if game.ReplicatedFirst:FindFirstChild("BLock") then notification("Lock already active") return else local f = Instance.new("Folder") f.Name = "BLock" f.Parent = game.ReplicatedFirst end
@@ -40,6 +43,7 @@ function makemarker(Parent, Adornee, Color, Size, Size2)
     a.BackgroundColor3 = Color
     local g = Instance.new("UICorner", a)
     g.CornerRadius = UDim.new(30, 30)
+
     return(e)
 end
 
@@ -47,9 +51,13 @@ local data = game.Players:GetPlayers()
 function noob(player)
     local character = player.Character or player.CharacterAdded:Wait()
     
-    local handler = makemarker(guimain, player.Character:WaitForChild("LowerTorso"), Color3.fromRGB(0, 76, 153), 0.0, 0)
+    local handler = makemarker(guimain, player.Character:WaitForChild("LowerTorso"), Color3.fromRGB(0, 75, 155), 0.0, 0)
     handler.Name = player.Name
-    player.CharacterAdded:connect(function(Char) handler.Adornee = Char:WaitForChild("LowerTorso") end)
+
+    player.CharacterAdded:Connect(function(Char)
+		handler.Adornee = Char:WaitForChild("LowerTorso")
+	end)
+
 	local TextLabel = Instance.new("TextLabel", handler)
 	TextLabel.BackgroundTransparency = 1
 	TextLabel.Position = UDim2.new(0, 0, 0, -50)
@@ -66,8 +74,8 @@ end
 for i = 1, #data do
     if data[i] ~= game.Players.LocalPlayer then
     	if data[i] then
-		noob(data[i])
-	end
+			noob(data[i])
+		end
     end
 end
 
@@ -98,9 +106,9 @@ mouse.KeyDown:Connect(function(k)
        -- guimain[Plr.Name].Frame.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
     else
     	Plr = getClosestPlayerToCursor()
-	if Plr and Plr ~= nil then
-		enabled = true 
-	end
+		if Plr and Plr ~= nil then
+			enabled = true 
+		end
         --guimain[Plr.Name].Frame.BackgroundColor3 = Color3.fromRGB(255, 0, 0)
     end    
 end)
@@ -110,23 +118,25 @@ function getClosestPlayerToCursor()
     local shortestDistance = math.huge
 
     task.spawn(function()
-    	for i, v in pairs(game.Players:GetPlayers()) do
-       	 	if v ~= game.Players.LocalPlayer and v.Character and v.Character:FindFirstChild("Humanoid") and v.Character.Humanoid.Health ~= 0 and v.Character:FindFirstChild("Head") then
-            		local pos = CC:WorldToViewportPoint(v.Character.PrimaryPart.Position)
-            		local magnitude = (Vector2.new(pos.X, pos.Y) - Vector2.new(mouse.X, mouse.Y)).magnitude
-            		if magnitude < shortestDistance then
-                		closestPlayer = v
-                		shortestDistance = magnitude
-            		end
+    	for i, v in pairs(game:GetService("Players"):GetPlayers()) do
+       	 	if v ~= game:GetService("Players").LocalPlayer and v.Character and v.Character:FindFirstChild("Humanoid") and v.Character.Humanoid.Health ~= 0 and v.Character:FindFirstChild("Head") then
+            	local pos = CC:WorldToViewportPoint(v.Character.PrimaryPart.Position)
+            	local magnitude = (Vector2.new(pos.X, pos.Y) - Vector2.new(mouse.X, mouse.Y)).magnitude
+
+            	if magnitude < shortestDistance then
+                	closestPlayer = v
+                	shortestDistance = magnitude
+            	end
         	end
     	end
     end)
+
    return closestPlayer
 end
 
 game:GetService"RunService".Stepped:connect(function()
 	if enabled and Plr.Character and Plr.Character:FindFirstChild("HumanoidRootPart") then
-		placemarker.CFrame = CFrame.new(Plr.Character.HumanoidRootPart.Position+(Plr.Character.HumanoidRootPart.Velocity*accomidationfactor))
+		placemarker.CFrame = CFrame.new(Plr.Character.HumanoidRootPart.Position + (Plr.Character.HumanoidRootPart.Velocity * accomidationfactor))
 	else
 		placemarker.CFrame = CFrame.new(0, 9999, 0)
 	end
@@ -142,7 +152,7 @@ mt.__namecall = newcclosure(function(...)
 		if Plr then
 			if Plr.Character then
 				if Plr.Character:FindFirstChild("HumanoidRootPart") then
-					local chunkPrediction = Plr.Character.HumanoidRootPart.Position+(Plr.Character.HumanoidRootPart.Velocity*accomidationfactor)
+					local chunkPrediction = Plr.Character.HumanoidRootPart.Position + (Plr.Character.HumanoidRootPart.Velocity * accomidationfactor)
 	
 					if Plr.Character:FindFirstChildOfClass("Humanoid") then
 						if Plr.Character.Humanoid.Health > 0.1 then
@@ -170,6 +180,9 @@ mt.__namecall = newcclosure(function(...)
 end)
 
 notification("Loaded | discord.gg/ggJ3bgt6TS")
+
+warn("[BL]: "..aimType)
+
 pcall(function()
 	setclipboard("discord.gg/ggJ3bgt6TS")
 end)
