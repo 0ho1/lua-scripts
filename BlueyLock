@@ -1,5 +1,5 @@
 local function notification(message)
-    game.StarterGui:SetCore("SendNotification", {
+    game:GetService("StarterGui"):SetCore("SendNotification", {
   	Title = "Bluey Lock";
   	Text = message;
   	Icon = "rbxassetid://806623071";
@@ -136,21 +136,27 @@ setreadonly(mt, false)
 mt.__namecall = newcclosure(function(...)
 	local args = {...}
 	
-	local chunkPrediction = args[3] = Plr.Character.HumanoidRootPart.Position+(Plr.Character.HumanoidRootPart.Velocity*accomidationfactor)
+	if Plr then
+		if Plr.Character then
+			if Plr.Character:FindFirstChild("HumanoidRootPart") then
+				local chunkPrediction = Plr.Character.HumanoidRootPart.Position+(Plr.Character.HumanoidRootPart.Velocity*accomidationfactor)
 	
-	if Plr.Character:FindFirstChildOfClass("Humanoid") then
-		if Plr.Character.Humanoid.Health > 0.1 then
-			if enabled and getnamecallmethod() == "FireServer" and args[2] == "UpdateMousePos" then
-				args[3] = chunkPrediction
-				return old(unpack(args))
-			else
-				if enabled and getnamecallmethod() == "FireServer" then
-					if args[1] ~= nil then
-						-- + Game Support
-			
-						if game.GameId == 9432735718 then
-							args[1] = chunkPrediction
+				if Plr.Character:FindFirstChildOfClass("Humanoid") then
+					if Plr.Character.Humanoid.Health > 0.1 then
+						if enabled and getnamecallmethod() == "FireServer" and args[2] == "UpdateMousePos" then
+							args[3] = chunkPrediction
 							return old(unpack(args))
+						else
+							if enabled and getnamecallmethod() == "FireServer" then
+								if args[1] ~= nil then
+									-- + Game Support
+			
+									if game.GameId == 9432735718 then
+										args[1] = chunkPrediction
+										return old(unpack(args))
+									end
+								end
+							end
 						end
 					end
 				end
