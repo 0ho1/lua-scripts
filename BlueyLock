@@ -76,7 +76,9 @@ game.Players.PlayerAdded:Connect(function(Player)
 end)
 
 game.Players.PlayerRemoving:Connect(function(player)
-    guimain[player.Name]:Destroy()
+	if guimain[player.Name] then
+		guimain[player.Name]:Destroy()
+	end
 end)
 
 spawn(function()
@@ -90,6 +92,7 @@ end)
 
 mouse.KeyDown:Connect(function(k)
     if k ~= "c" then return end
+    
     if enabled then
         enabled = false
        -- guimain[Plr.Name].Frame.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
