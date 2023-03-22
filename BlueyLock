@@ -61,14 +61,6 @@ function noob(player)
 	TextLabel.TextYAlignment = Enum.TextYAlignment.Bottom
 	TextLabel.Text = 'Name: '..player.Name
 	TextLabel.ZIndex = 10
-	
-	spawn(function()
-       		while task.wait() do
-            		if player.Character then
-                		--TextLabel.Text = player.Name.." | Bounty: "..tostring(player:WaitForChild("leaderstats").Wanted.Value).." | "..tostring(math.floor(player.Character:WaitForChild("Humanoid").Health))
-            		end
-        	end
-    	end)
 end
 
 for i = 1, #data do
@@ -79,7 +71,7 @@ for i = 1, #data do
     end
 end
 
-game.Players.PlayerAdded:connect(function(Player)
+game.Players.PlayerAdded:Connect(function(Player)
     noob(Player)
 end)
 
@@ -92,6 +84,7 @@ spawn(function()
     placemarker.CanCollide = false
     placemarker.Size = Vector3.new(0.1, 0.1, 0.1)
     placemarker.Transparency = 10
+    
     makemarker(placemarker, placemarker, Color3.fromRGB(0, 0, 255), 0.55, 0)
 end)    
 
@@ -101,8 +94,10 @@ mouse.KeyDown:Connect(function(k)
         enabled = false
        -- guimain[Plr.Name].Frame.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
     else
-        enabled = true 
-        Plr = getClosestPlayerToCursor()
+    	Plr = getClosestPlayerToCursor()
+	if Plr and Plr ~= nil then
+		enabled = true 
+	end
         --guimain[Plr.Name].Frame.BackgroundColor3 = Color3.fromRGB(255, 0, 0)
     end    
 end)
