@@ -22,152 +22,154 @@ if not game:GetService("ReplicatedStorage"):FindFirstChild("MainEvent") then
 end
 if game.ReplicatedFirst:FindFirstChild("BLock") then notification("Lock already active") return else local f = Instance.new("Folder") f.Name = "BLock" f.Parent = game.ReplicatedFirst end
 
-local CC = game:GetService'Workspace'.CurrentCamera
-local Plr
-local enabled = false
-local baseFactor = 0.0132575
-local accomidationfactor = baseFactor
-local mouse = game.Players.LocalPlayer:GetMouse()
-local placemarker = Instance.new("Part", game.Workspace)
-local guimain = Instance.new("Folder", game.CoreGui)
+local s, e = pcall(function()
+	local CC = game:GetService'Workspace'.CurrentCamera
+	local Plr
+	local enabled = false	
+	local baseFactor = 0.0132575
+	local accomidationfactor = baseFactor	
+	local mouse = game.Players.LocalPlayer:GetMouse()
+	local placemarker = Instance.new("Part", game.Workspace)
+	local guimain = Instance.new("Folder", game.CoreGui)
 
-function makemarker(Parent, Adornee, Color, Size, Size2)
-    local e = Instance.new("BillboardGui", Parent)
-    e.Name = "PP"
-    e.Adornee = Adornee
-    e.Size = UDim2.new(Size, Size2, Size, Size2)
-    e.AlwaysOnTop = true
-    local a = Instance.new("Frame", e)
-    a.Size = UDim2.new(1.75, 0, 1.75, 0)
-    a.BackgroundTransparency = 0.4
-    a.BackgroundColor3 = Color
-    local g = Instance.new("UICorner", a)
-    g.CornerRadius = UDim.new(30, 30)
+	function makemarker(Parent, Adornee, Color, Size, Size2)
+    	local e = Instance.new("BillboardGui", Parent)
+    	e.Name = "PP"
+    	e.Adornee = Adornee
+    	e.Size = UDim2.new(Size, Size2, Size, Size2)
+    	e.AlwaysOnTop = true
+    	local a = Instance.new("Frame", e)
+    	a.Size = UDim2.new(1.75, 0, 1.75, 0)
+   	 	a.BackgroundTransparency = 0.4
+    	a.BackgroundColor3 = Color
+    	local g = Instance.new("UICorner", a)
+    	g.CornerRadius = UDim.new(30, 30)
 
-    return(e)
-end
+   	 	return(e)
+	end
 
-local data = game.Players:GetPlayers()
-function noob(player)
-    local character = player.Character or player.CharacterAdded:Wait()
+	local data = game.Players:GetPlayers()
+	function noob(player)
+    	local character = player.Character or player.CharacterAdded:Wait()
     
-    local handler = makemarker(guimain, player.Character:WaitForChild("LowerTorso"), Color3.fromRGB(0, 75, 155), 0.0, 0)
-    handler.Name = player.Name
+    	local handler = makemarker(guimain, player.Character:WaitForChild("LowerTorso"), Color3.fromRGB(0, 75, 155), 0.0, 0)
+    	handler.Name = player.Name
 
-    player.CharacterAdded:Connect(function(Char)
-		handler.Adornee = Char:WaitForChild("LowerTorso")
+   	 	player.CharacterAdded:Connect(function(Char)
+			handler.Adornee = Char:WaitForChild("LowerTorso")
+		end)
+
+		local TextLabel = Instance.new("TextLabel", handler)
+		TextLabel.BackgroundTransparency = 1
+		TextLabel.Position = UDim2.new(0, 0, 0, -50)
+		TextLabel.Size = UDim2.new(0, 100, 0, 100)
+		TextLabel.Font = Enum.Font.SourceSansSemibold
+		TextLabel.TextSize = 14
+		TextLabel.TextColor3 = Color3.new(1, 1, 1)
+		TextLabel.TextStrokeTransparency = 0
+		TextLabel.TextYAlignment = Enum.TextYAlignment.Bottom
+		TextLabel.Text = 'Name: '..player.Name
+		TextLabel.ZIndex = 10
+	end
+
+	for i = 1, #data do
+   	 	if data[i] ~= game.Players.LocalPlayer then
+    		if data[i] then
+				noob(data[i])
+			end
+    	end
+	end
+
+	game.Players.PlayerAdded:Connect(function(Player)
+    	noob(Player)
+ 	end)
+
+	game.Players.PlayerRemoving:Connect(function(player)
+		if guimain[player.Name] then
+			guimain[player.Name]:Destroy()
+		end
+	end)	
+
+	spawn(function()
+    	placemarker.Anchored = true
+    	placemarker.CanCollide = false
+    	placemarker.Size = Vector3.new(0.1, 0.1, 0.1)
+    	placemarker.Transparency = 10
+	
+  	  	makemarker(placemarker, placemarker, Color3.fromRGB(0, 0, 255), 0.55, 0)
+	end)    
+
+	mouse.KeyDown:Connect(function(k)
+   	 	if k ~= "c" then return end
+    
+    	if enabled then
+        	enabled = false
+      	 	-- guimain[Plr.Name].Frame.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+   	 	else
+    		Plr = getClosestPlayerToCursor()
+			if Plr and Plr ~= nil then
+				enabled = true 
+			end
+    	    --guimain[Plr.Name].Frame.BackgroundColor3 = Color3.fromRGB(255, 0, 0)
+    	end    
 	end)
 
-	local TextLabel = Instance.new("TextLabel", handler)
-	TextLabel.BackgroundTransparency = 1
-	TextLabel.Position = UDim2.new(0, 0, 0, -50)
-	TextLabel.Size = UDim2.new(0, 100, 0, 100)
-	TextLabel.Font = Enum.Font.SourceSansSemibold
-	TextLabel.TextSize = 14
-	TextLabel.TextColor3 = Color3.new(1, 1, 1)
-	TextLabel.TextStrokeTransparency = 0
-	TextLabel.TextYAlignment = Enum.TextYAlignment.Bottom
-	TextLabel.Text = 'Name: '..player.Name
-	TextLabel.ZIndex = 10
-end
+	function getClosestPlayerToCursor()
+   		local closestPlayer
+   	   	local shortestDistance = math.huge
 
-for i = 1, #data do
-    if data[i] ~= game.Players.LocalPlayer then
-    	if data[i] then
-			noob(data[i])
-		end
-    end
-end
-
-game.Players.PlayerAdded:Connect(function(Player)
-    noob(Player)
-end)
-
-game.Players.PlayerRemoving:Connect(function(player)
-	if guimain[player.Name] then
-		guimain[player.Name]:Destroy()
-	end
-end)
-
-spawn(function()
-    placemarker.Anchored = true
-    placemarker.CanCollide = false
-    placemarker.Size = Vector3.new(0.1, 0.1, 0.1)
-    placemarker.Transparency = 10
-    
-    makemarker(placemarker, placemarker, Color3.fromRGB(0, 0, 255), 0.55, 0)
-end)    
-
-mouse.KeyDown:Connect(function(k)
-    if k ~= "c" then return end
-    
-    if enabled then
-        enabled = false
-       -- guimain[Plr.Name].Frame.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
-    else
-    	Plr = getClosestPlayerToCursor()
-		if Plr and Plr ~= nil then
-			enabled = true 
-		end
-        --guimain[Plr.Name].Frame.BackgroundColor3 = Color3.fromRGB(255, 0, 0)
-    end    
-end)
-
-function getClosestPlayerToCursor()
-    local closestPlayer
-    local shortestDistance = math.huge
-
-    pcall(function()
-		task.spawn(function()
-			for i, v in pairs(game:GetService("Players"):GetPlayers()) do
-				if v ~= game:GetService("Players").LocalPlayer and v.Character and v.Character:FindFirstChild("Humanoid") and v.Character.Humanoid.Health > 0.1 and v.Character:FindFirstChild("Head") then
-					local pos = CC:WorldToViewportPoint(v.Character.PrimaryPart.Position)
-					local magnitude = (Vector2.new(pos.X, pos.Y) - Vector2.new(mouse.X, mouse.Y)).magnitude
-			
-					if magnitude < shortestDistance then
-						closestPlayer = v
-						shortestDistance = magnitude
+ 	   	pcall(function()
+			task.spawn(function()
+				for i, v in pairs(game:GetService("Players"):GetPlayers()) do
+					if v ~= game:GetService("Players").LocalPlayer and v.Character and v.Character:FindFirstChild("Humanoid") and v.Character.Humanoid.Health > 0.1 and v.Character:FindFirstChild("Head") then
+						local pos = CC:WorldToViewportPoint(v.Character.PrimaryPart.Position)
+						local magnitude = (Vector2.new(pos.X, pos.Y) - Vector2.new(mouse.X, mouse.Y)).magnitude
+					
+						if magnitude < shortestDistance then
+							closestPlayer = v
+							shortestDistance = magnitude
+						end
 					end
 				end
-			end
+			end)
 		end)
+
+ 	 	return closestPlayer
+	end
+
+	game:GetService"RunService".Stepped:connect(function()
+		if enabled and Plr.Character and Plr.Character:FindFirstChild("HumanoidRootPart") then
+			placemarker.CFrame = CFrame.new(Plr.Character.HumanoidRootPart.Position + (Plr.Character.HumanoidRootPart.Velocity * accomidationfactor))
+		else
+			placemarker.CFrame = CFrame.new(0, 9999, 0)
+		end
 	end)
 
-   return closestPlayer
-end
-
-game:GetService"RunService".Stepped:connect(function()
-	if enabled and Plr.Character and Plr.Character:FindFirstChild("HumanoidRootPart") then
-		placemarker.CFrame = CFrame.new(Plr.Character.HumanoidRootPart.Position + (Plr.Character.HumanoidRootPart.Velocity * accomidationfactor))
-	else
-		placemarker.CFrame = CFrame.new(0, 9999, 0)
-	end
-end)
-
-local mt = getrawmetatable(game)
-local old = mt.__namecall
-setreadonly(mt, false)
-mt.__namecall = newcclosure(function(...)
-	local args = {...}
+	local mt = getrawmetatable(game)
+	local old = mt.__namecall
+	setreadonly(mt, false)
+	mt.__namecall = newcclosure(function(...)
+		local args = {...}
 	
-	task.spawn(function()
-		if Plr then
-			if Plr.Character then
-				if Plr.Character:FindFirstChild("HumanoidRootPart") then
-					local chunkPrediction = Plr.Character.HumanoidRootPart.Position + (Plr.Character.HumanoidRootPart.Velocity * accomidationfactor)
+		task.spawn(function()
+			if Plr then
+				if Plr.Character then
+					if Plr.Character:FindFirstChild("HumanoidRootPart") then
+						local chunkPrediction = Plr.Character.HumanoidRootPart.Position + (Plr.Character.HumanoidRootPart.Velocity * accomidationfactor)
 	
-					if Plr.Character:FindFirstChildOfClass("Humanoid") then
-						if Plr.Character.Humanoid.Health > 0.1 then
-							if enabled and getnamecallmethod() == "FireServer" and args[2] == "UpdateMousePos" then
-								args[3] = chunkPrediction
-								return old(unpack(args))
-							elseif enabled and getnamecallmethod() == "FireServer" then
-								if args[1] ~= nil then
-									-- + Addiontial Game Support
+						if Plr.Character:FindFirstChildOfClass("Humanoid") then
+							if Plr.Character.Humanoid.Health > 0.1 then
+								if enabled and getnamecallmethod() == "FireServer" and args[2] == "UpdateMousePos" then
+									args[3] = chunkPrediction
+									return old(unpack(args))
+								elseif enabled and getnamecallmethod() == "FireServer" then
+									if args[1] ~= nil then
+										-- + Addiontial Game Support
 			
-									if game.GameId == 9432735718 then
-										args[1] = chunkPrediction
-										return old(unpack(args))
+										if game.GameId == 9432735718 then
+											args[1] = chunkPrediction
+											return old(unpack(args))
+										end
 									end
 								end
 							end
@@ -175,11 +177,12 @@ mt.__namecall = newcclosure(function(...)
 					end
 				end
 			end
-		end
-	end)
+		end)
 	
-	return old(...)
+		return old(...)
+	end)
 end)
+if not s then warn("[BL] - "..e) end
 
 notification("Loaded | discord.gg/ggJ3bgt6TS")
 
