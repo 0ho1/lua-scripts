@@ -184,16 +184,16 @@ end
 
 rs:Set3dRenderingEnabled(true)
 
-UserInputService.WindowFocusReleased:Connect(function()
+uis.WindowFocusReleased:Connect(function()
 	RunService:Set3dRenderingEnabled(false)
     	setfpscap(10)
 end)
-UserInputService.WindowFocused:Connect(function()
+uis.WindowFocused:Connect(function()
  	RunService:Set3dRenderingEnabled(true)
     	setfpscap(175)
 end)
 
-
+--// End \\--
 local Version = ".115"
 print("Loaded Bluey Booster (@V"..Version..")")
 pcall(function()
